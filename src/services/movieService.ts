@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { MoviesServiseResponse } from '../types/movie';
+import type { MoviesServiceResponse } from '../types/movie';
 import toast from 'react-hot-toast';
 
 const API_KEY = import.meta.env.VITE_TMDB_TOKEN;
@@ -8,12 +8,12 @@ const BASE_URL = 'https://api.themoviedb.org/3/search/movie';
 export default async function fetchMovies(
   topic: string,
   page: number
-): Promise<MoviesServiseResponse> {
+): Promise<MoviesServiceResponse> {
   const query = topic.trim();
-  if (!query) return { results: [], total_page: 0 };
+  if (!query) return { results: [], total_pages: 0 };
 
   try {
-    const response = await axios.get<MoviesServiseResponse>(`${BASE_URL}`, {
+    const response = await axios.get<MoviesServiceResponse>(`${BASE_URL}`, {
       params: {
         query,
         include_adult: false,
@@ -28,6 +28,6 @@ export default async function fetchMovies(
     return response.data;
   } catch (error) {
     toast.error('There was an error, please try again...');
-    return { results: [], total_page: 0 };
+    return { results: [], total_pages: 0 };
   }
 }
