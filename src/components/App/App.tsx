@@ -33,29 +33,29 @@ function App() {
   const closeModal = () => {
     setSelectedMovie(null);
   };
-  useEffect(() => {
-    const loadMovies = async () => {
-      if (!topic.trim()) return;
+  // useEffect(() => {
+  //   const loadMovies = async () => {
+  //     if (!topic.trim()) return;
 
-      setIsError(false);
-      setIsLoading(true);
-      setMovies([]);
-      try {
-        const data = await fetchMovies(topic);
+  //     setIsError(false);
+  //     setIsLoading(true);
+  //     setMovies([]);
+  //     try {
+  //       const data = await fetchMovies(topic, page);
 
-        if (data.length === 0) {
-          toast.error('No movies found for your request');
-        }
-        setMovies(data);
-      } catch {
-        setIsError(true);
-        toast.error('There was an error, please try again...');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadMovies();
-  }, [topic]);
+  //       if (data.length === 0) {
+  //         toast.error('No movies found for your request');
+  //       }
+  //       setMovies(data);
+  //     } catch {
+  //       setIsError(true);
+  //       toast.error('There was an error, please try again...');
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   loadMovies();
+  // }, [topic]);
 
   return (
     <div className={css.app}>
