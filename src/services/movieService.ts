@@ -7,11 +7,15 @@ const BASE_URL = 'https://api.themoviedb.org/3/search/movie';
 
 interface MoviesServiseResponse {
   results: Movie[];
+  total_page: number;
 }
 
-export default async function fetchMovies(topic: string): Promise<Movie[]> {
+export default async function fetchMovies(
+  topic: string,
+  page: number
+): Promise<MoviesServiseResponse> {
   const query = topic.trim();
-  if (!query) return [];
+  if (!query) return { results: [], total_page: 0 };
 
   try {
     const response = await axios.get<MoviesServiseResponse>(`${BASE_URL}`, {
@@ -19,16 +23,16 @@ export default async function fetchMovies(topic: string): Promise<Movie[]> {
         query,
         include_adult: false,
         language: 'en-US',
-        page: 1,
+        page,
       },
       headers: {
         Authorization: `Bearer ${API_KEY}`,
       },
     });
 
-    return response.data.results;
+    return response.data;
   } catch (error) {
     toast.error('There was an error, please try again...');
-    return [];
+    return { results: [], total_page: 0 };
   }
 }

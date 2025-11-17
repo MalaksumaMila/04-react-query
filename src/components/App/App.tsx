@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import css from './App.module.css';
+import ReactPaginate from 'react-paginate';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 
 import type { Movie } from '../../types/movie';
 import fetchMovies from '../../services/movieService';
@@ -14,9 +16,17 @@ import MovieModal from '../MovieModal/MovieModal';
 function App() {
   const [topic, setTopic] = useState<string>('');
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+
+  const [page, setPage] = useState(1);
+  const { data, isLoading, isError, isSuccess } = useQuery({
+    queryKey: ['movies', topic, page],
+    queryFn: () => fetchMovies(topic, page),
+    enabled: topic !== '',
+    placeholderData: keepPreviousData,
+  });
+
+  const totalPages = data?.total_page ?? 0;
 
   const handleSearch = (q: string) => setTopic(q);
   const handleSelect = (movie: Movie) => setSelectedMovie(movie);
@@ -51,6 +61,20 @@ function App() {
     <div className={css.app}>
       <Toaster position="top-center" />
       <SearchBar onSubmit={handleSearch} />
+
+      {isSuccess && totalPages > 1 && (
+        <ReactPaginate
+          pageCount={totalPages}
+          pageRangeDisplayed={5}
+          marginPagesDisplayed={1}
+          onPageChange={({ selected }) => setPage(selected + 1)}
+          forcePage={page - 1}
+          containerClassName={css.pagination}
+          activeClassName={css.active}
+          nextLabel="→"
+          previousLabel="←"
+        />
+      )}
 
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
