@@ -39,7 +39,10 @@ function App() {
 
   const totalPages = data?.total_pages ?? 0;
 
-  const handleSearch = (q: string) => setTopic(q);
+  const handleSearch = (q: string) => {
+    setTopic(q);
+    setPage(1);
+  };
   const handleSelect = (movie: Movie) => setSelectedMovie(movie);
   const closeModal = () => {
     setSelectedMovie(null);
@@ -54,7 +57,6 @@ function App() {
         <ReactPaginate
           pageCount={totalPages}
           pageRangeDisplayed={5}
-          initialPage={page}
           marginPagesDisplayed={1}
           onPageChange={({ selected }) => setPage(selected + 1)}
           forcePage={page - 1}
