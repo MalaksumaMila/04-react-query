@@ -1,9 +1,14 @@
 import axios from 'axios';
-import type { MoviesServiceResponse } from '../types/movie';
+import type { Movie } from '../types/movie';
 import toast from 'react-hot-toast';
 
 const API_KEY = import.meta.env.VITE_TMDB_TOKEN;
 const BASE_URL = 'https://api.themoviedb.org/3/search/movie';
+export interface MoviesServiceResponse {
+  results: Movie[];
+  total_pages: number;
+}
+
 
 export default async function fetchMovies(
   topic: string,
